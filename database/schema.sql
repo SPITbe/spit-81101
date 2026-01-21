@@ -36,3 +36,11 @@ CREATE TABLE IF NOT EXISTS investigations (
   intercepted_by VARCHAR(32),
   spied_by VARCHAR(32)
 );
+
+CREATE TABLE IF NOT EXISTS pp_distributions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  guild_id VARCHAR(32) NOT NULL,
+  game_id INT NOT NULL,
+  execute_at DATETIME NOT NULL,
+  executed BOOLEAN DEFAULT FALSE
+);

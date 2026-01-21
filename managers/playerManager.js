@@ -36,6 +36,13 @@ class PlayerManager {
             [amount, discordId, guildId]
         )
     }
+
+    static async addPPToAll(guildId, amount) {
+        await pool.query(
+            `UPDATE players SET pp = pp + ? WHERE guild_id = ?`,
+            [amount, guildId]
+        )
+    }
 }
 
 module.exports = PlayerManager;
