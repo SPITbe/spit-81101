@@ -44,3 +44,15 @@ CREATE TABLE IF NOT EXISTS pp_distributions (
   execute_at DATETIME NOT NULL,
   executed BOOLEAN DEFAULT FALSE
 );
+
+CREATE TABLE IF NOT EXISTS pending_responses (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  guild_id VARCHAR(32),
+  discord_id VARCHAR(32),
+  keyword VARCHAR(100),
+  result ENUM('fail','success','perfect'),
+  response_text TEXT,
+  execute_at DATETIME,
+  delivered BOOLEAN DEFAULT FALSE
+);
+

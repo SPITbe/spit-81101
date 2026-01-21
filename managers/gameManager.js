@@ -1,4 +1,3 @@
-const { act } = require('react');
 const pool = require('../database/db');
 const ScheduleManager = require('./scheduleManager');
 
