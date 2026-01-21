@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 const ScheduleManager = require('./managers/scheduleManager');
 const InvestigationManager = require('./managers/investigationManager');
+const { initDB } = require('./database/init');
 
 const dexter = new Client({intents: [GatewayIntentBits.Guilds]})
 

@@ -1,4 +1,4 @@
-const { Events } = require("discord.js")
+const { Events, MessageFlags } = require("discord.js")
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -15,12 +15,12 @@ module.exports = {
             if (interaction.replied || interaction.deferred) {
                 await interaction.followUp({
                     content: '❌ Une erreur est survenue lors de l\'exécution de cette commande !',
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 })
             } else {
                 await interaction.reply({
                     content: '❌ Une erreur est survenue lors de l\'exécution de cette commande !',
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
         }

@@ -34,7 +34,7 @@ class GameManager {
         await pool.query(
             `UPDATE games 
             SET status = 'ended', ended_at = NOW()
-            WHER id = ?`,
+            WHERE id = ?`,
             [active.id]
         );
 
