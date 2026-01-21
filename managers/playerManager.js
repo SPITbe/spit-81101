@@ -43,6 +43,14 @@ class PlayerManager {
             [amount, guildId]
         )
     }
+
+    static async getAllPlayers(guildId) {
+        const [rows] = await pool.query(
+            `SELECT * FROM players WHERE guild_id = ?`,
+            [guildId]
+        );
+        return rows;
+    }
 }
 
 module.exports = PlayerManager;

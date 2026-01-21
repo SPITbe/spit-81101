@@ -37,6 +37,22 @@ class GameManager {
             WHER id = ?`,
             [active.id]
         );
+
+        await pool.query(
+            `DELETE FROM pending_actions WHERE guild_id = ?`,
+            [guildId]
+        );
+
+        await pool.query(
+            `DELETE FROM pending_responses WHERE guild_id = ? AND delivered = true`,
+            [guildId]
+        );
+
+        await pool.query(
+            `DELETE FROM pp_distributions WHERE guild_id = ?`,
+            [guildId]
+        );
+
         return true;
     }
 }

@@ -56,3 +56,11 @@ CREATE TABLE IF NOT EXISTS pending_responses (
   delivered BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS pending_actions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  guild_id VARCHAR(32),
+  actor_id VARCHAR(32),
+  target_id VARCHAR(32),
+  type ENUM('spy','intercept'),
+  consumed BOOLEAN DEFAULT FALSE
+);

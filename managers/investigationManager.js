@@ -29,24 +29,65 @@ class InvestigationManager {
         )
     }
 
-    static async runPendingResponses(dexter) {
+    static async runPendingResponses(client) {
         const [rows] = await pool.query(
             `SELECT * FROM pending_responses
             WHERE delivered = false AND execute_at <= NOW()`
-        )
+        );
 
         for (const row of rows) {
-            try {
-                const guild = await dexter.guilds.fetch(row.guild_id);
-                const member = await guild.members.fetch(row.discord_id);
-                await member.send(`🔔 Résultat de votre enquête pour le mot-clé **${row.keyword}** :\n\n${row.response_text}`);
+            const action = await ActionManager.getPendingAction(
+            row.guild_id,
+            row.discord_id
+            );
 
-                await pool.query(
-                    `UPDATE pending_responses SET delivered = true WHERE id = ?`,
-                    [row.id]
-                )
+            try {
+            const guild = await client.guilds.fetch(row.guild_id);
+            const target = await guild.members.fetch(row.discord_id);
+
+            // INTERCEPTION
+            if (action && action.type === 'intercept') {
+                await target.send(
+                '🚨 **L’équipe d’enquête a disparu sans laisser de traces…**'
+                );
+
+                const interceptor = await guild.members.fetch(action.actor_id);
+
+                setTimeout(async () => {
+                await interceptor.send(
+                    `📑 **Rapport intercepté (${row.keyword})** :\n${row.response_text}`
+                );
+                }, 5 * 60 * 1000);
+
+                await ActionManager.consumeAction(action.id);
+            }
+
+            // ESPIONNAGE
+            else {
+                await target.send(
+                `🕵️ **Résultat de ton enquête (${row.keyword})** :\n${row.response_text}`
+                );
+
+                if (action && action.type === 'spy') {
+                const spy = await guild.members.fetch(action.actor_id);
+
+                setTimeout(async () => {
+                    await spy.send(
+                    `🕶️ **Rapport espionné (${row.keyword})** :\n${row.response_text}`
+                    );
+                }, 5 * 60 * 1000);
+
+                await ActionManager.consumeAction(action.id);
+                }
+            }
+
+            await pool.query(
+                `UPDATE pending_responses SET delivered = true WHERE id = ?`,
+                [row.id]
+            );
+
             } catch (err) {
-                console.error(`Erreur envoi enquête: `, err)
+            console.error('Erreur espion/interception:', err);
             }
         }
     }

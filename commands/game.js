@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require("discord.js");
 const GameManager = require("../managers/gameManager");
+const SummaryManager = require("../managers/summaryManager");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -32,7 +33,9 @@ module.exports = {
             if (!stopped) {
                 return interaction.reply({content: '❌ Aucune partie en cours à arrêter dans ce serveur.', flags: MessageFlags.Ephemeral});
             }
-            return interaction.reply({content: '✅ La partie a été arrêtée ! Merci d\'avoir joué ! 🎉'});
+            await interaction.reply({content: '✅ La partie a été arrêtée ! Merci d\'avoir joué ! 🎉'});
+            const summary = await SummaryManager.generate(guildId)
+            await interaction.channel.send(summary)
         }
     }
 }
